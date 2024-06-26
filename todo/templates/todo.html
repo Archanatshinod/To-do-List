@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <title>To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 20px;
+        }
+        .todo-container {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .todo-container h2 {
+            margin-bottom: 20px;
+        }
+        .add-task {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .add-task input[type="text"] {
+            width: calc(70% - 10px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        .add-task button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td.actions {
+            text-align: center;
+        }
+        .delete-btn, .finish-btn {
+            padding: 6px 10px;
+            margin-right: 5px;
+            /* cursor: pointer; */
+            border: none;
+            border-radius: 4px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <h2>To-Do List</h2>
+        
+        <form method="POST">
+                {% csrf_token %}
+        <div class="add-task">
+            <input type="text" id="task" name="task" placeholder="Enter task...">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+        </form>
+    
+        <table id="taskTable">
+            <thead>
+                <tr>
+                    <!-- <th>Sl No.</th> -->
+                    <th>To Do Item</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="taskList">
+               {% for i in todos %} 
+               <tr>
+                <!-- Tasks will be added dynamically here -->
+                <td>{{i.Todo_name}}</td>
+                {% if i.status == True %}
+                        <td>Completed</td>
+                    {% else %}
+                        <td> In progress</td>
+                    {% endif %}
+                    <td>
+                        <a href="{% url 'deletetask' i.Todo_name %}" style="display: inline-block;">
+                            <button type="button" class="btn btn-danger ms-2">Delete</button>
+                        </a>
+                        <a href="{% url 'updatetask' i.Todo_name %}">
+                            <button type="button" class="btn btn-success ms-2">Finished</button>
+                        </a>
+                    </td>
+                </tr>  
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'logout' %}"> <button type="button" class="btn btn-info mt-4">Logout</button></a>
+    <!-- </div> -->
+</div>
+    <script>
+        // let taskId = 1; // Initialize task ID counter
+
+        // Function to add a new task to the list
+        // function addTask() {
+        //     const taskInput = document.getElementById('taskInput');
+        //     const taskText = taskInput.value.trim();
+
+        //     // if (taskText !== '') {
+        //     //     const taskList = document.getElementById('taskList');
+
+        //         // Create new row
+        //         // const newRow = document.createElement('tr');
+        //         // newRow.innerHTML = `
+                    
+        //         //     <td>Pending</td>
+        //         //     <td class="actions">
+        //         //         <button class="delete-btn" onclick="deleteTask(${taskId})">Delete</button>
+        //         //         <button class="finish-btn" onclick="finishTask(${taskId})">Finish</button>
+        //         //     </td>
+        //         // `;
+
+        //         // Append row to the table
+        //         taskList.appendChild(newRow);
+
+        //         // Clear input
+        //         taskInput.value = '';
+
+        //         // Increment task ID for the next task
+        //         taskId++;
+        //     }
+        
+
+        // // Function to delete a task
+        // function deleteTask(id) {
+        //     const row = document.querySelector(`#taskList tr:nth-child(${id})`);
+        //     if (row) {
+        //         row.remove();
+        //     }
+        // }
+
+        // // Function to mark a task as finished
+        // function finishTask(id) {
+        //     const row = document.querySelector(`#taskList tr:nth-child(${id})`);
+        //     if (row) {
+        //         row.querySelector('td:nth-child(3)').textContent = 'Finished';
+        //     }
+        // }
+    </script>
+</body>
+</html>
